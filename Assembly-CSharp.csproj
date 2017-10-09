@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Ball.cs" />
      <Compile Include="Assets\BoardManager.cs" />
+     <Compile Include="Assets\ChangeByBoundary.cs" />
      <Compile Include="Assets\TileController.cs" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>

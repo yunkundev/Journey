@@ -10,6 +10,7 @@ public class BoardManager : MonoBehaviour {
 	public GameObject line;
 	public int number;
 	public float lenOfLine;
+	public int initialCountervalue;
 
 
 	private GameObject[] tiles;
@@ -17,13 +18,14 @@ public class BoardManager : MonoBehaviour {
 	private Vector3 mousePos;
 	private bool hasTiles;
 	private int[] chosen;
-	private int cnt;
+	private int cnt, counterForNewTiles;
 	private List<GameObject> lines = new List<GameObject>();
 	private int[] state; // the state of every tile, 0: active, 1: chosen but not removed, 2: removed
 
 	// Use this for initialization
 	void Start () {
 		instance = GetComponent<BoardManager> ();
+		counterForNewTiles = 0;
 		init ();
 	}
 
@@ -36,7 +38,7 @@ public class BoardManager : MonoBehaviour {
 			float x = (float)Random.Range ((float)-2.5, (float)2.5);
 			float y = (float)Random.Range ((float)-1.7, (float)1.7);
 			GameObject newTile = Instantiate (tile, new Vector3(x, y, 0), tile.transform.rotation);
-			newTile.transform.parent = transform;
+			//newTile.transform.parent = transform;
 			int idx = Random.Range (0, characters.Count);
 			Sprite newSprite = characters [idx];
 			newTile.GetComponent<SpriteRenderer> ().sprite = newSprite;
@@ -97,21 +99,41 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	bool InCircle(int idx, int st){
-		float sum = 0;
-		for (int i = st; i < cnt - 1; ++i) {
-			Vector3 p1 = tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center;
-			Vector3 p2 = tiles [chosen [i + 1]].GetComponent<CircleCollider2D> ().bounds.center;
-			sum += p1.x * p2.y - p1.y * p2.x;
+//		float sum = 0;
+//		for (int i = st; i < cnt - 1; ++i) {
+//			Vector3 p1 = tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center;
+//			Vector3 p2 = tiles [chosen [i + 1]].GetComponent<CircleCollider2D> ().bounds.center;
+//			sum += p1.x * p2.y - p1.y * p2.x;
+//		}
+//		if (sum < 0)
+//			sum = -sum;
+//		Vector3 p = tiles [idx].GetComponent<CircleCollider2D> ().bounds.center;
+//		for (int i = st; i < cnt - 1; ++i) {
+//			Vector3 p1 = tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center - p;
+//			Vector3 p2 = tiles [chosen [i + 1]].GetComponent<CircleCollider2D> ().bounds.center - p;
+//			sum -= Mathf.Abs (p1.x * p2.y - p1.y * p2.x);
+//		}
+//		return Mathf.Abs (sum) < 1e-5;
+
+		List<Vector3> points = new List<Vector3>();
+		for (int i = st; i < cnt; ++i) {
+			points.Add (tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center);
 		}
-		if (sum < 0)
-			sum = -sum;
-		Vector3 p = tiles [idx].GetComponent<CircleCollider2D> ().bounds.center;
-		for (int i = st; i < cnt - 1; ++i) {
-			Vector3 p1 = tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center - p;
-			Vector3 p2 = tiles [chosen [i + 1]].GetComponent<CircleCollider2D> ().bounds.center - p;
-			sum -= Mathf.Abs (p1.x * p2.y - p1.y * p2.x);
+		Vector3 pp = tiles [idx].GetComponent<CircleCollider2D> ().bounds.center;
+		int num = 0;
+		float d1, d2, k;
+		for (int i = 0; i + 1 < points.Count; ++i) {
+			Vector3 v1 = points [i + 1] - points [i];
+			Vector3 v2 = pp - points [i];
+			k = v1.x * v2.y - v1.y * v2.x;
+			d1 = points [i].y - pp.y;
+			d2 = points [i + 1].y - pp.y;
+			if (k > 0 && d1 <= 0 && d2 > 0)
+				++num;
+			if (k < 0 && d2 <= 0 && d1 > 0)
+				--num;
 		}
-		return Mathf.Abs (sum) < 1e-5;
+		return num != 0;
 	}
 
 	void RemoveAllinCircle(int idx){
@@ -132,6 +154,42 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+	void PushNewTiles(){
+		int cnt = number;
+		List<int> rc = new List<int>();
+		for (int i = 0; i < number; ++i) {
+			if (state [i] == 2) {
+				--cnt;
+				rc.Add (i);
+			}
+		}
+		int flag = 1;
+		if (cnt <= number / 2) {
+			flag = 0;
+		} else if (cnt <= 2 * number / 3) {
+			flag = Random.Range (0, 2);
+		} else if (cnt <= 3 * number / 4) {
+			flag = Random.Range (0, 3);
+		} else if (cnt <= 4 * number / 5) {
+			flag = Random.Range (0, 4);
+		} else if (cnt < number) {
+			flag = Random.Range (0, 5);
+		}
+		if (flag != 0) {
+			return;
+		}
+		for (int i = 0; i < rc.Count; ++i) {
+			print ("init " + rc[i]);
+			int idx = Random.Range (0, characters.Count);
+			Sprite newSprite = characters [idx];
+			tiles[rc[i]].GetComponent<SpriteRenderer> ().sprite = newSprite;
+			type [rc[i]] = idx;
+			tiles [rc [i]].GetComponent<TileController> ().init ();
+			state [rc [i]] = 0;
+			tiles [rc [i]].SetActive (true);
+		}
+	}
+
 	void Update(){
 		if (Input.GetMouseButtonDown (0)) {
 			mousePos = Input.mousePosition;
@@ -141,10 +199,10 @@ public class BoardManager : MonoBehaviour {
 				hasTiles = true;
 				cnt = 0;
 				chosen [cnt++] = idx;
-				print ("2 : push " + idx);
+				//print ("2 : push " + idx);
 				//print ("1: Push" + idx + "cnt = " + cnt);
 				GameObject clone = Instantiate(line, tiles[idx].transform.position, transform.rotation);
-				clone.transform.parent = transform;
+				//clone.transform.parent = transform;
 				clone.transform.localScale = new Vector3 (0, 1, 1);
 				clone.SetActive (true);
 				lines.Add (clone);
@@ -169,13 +227,13 @@ public class BoardManager : MonoBehaviour {
 					l.transform.localScale = new Vector3 (dis / lenOfLine, 1, 1);
 
 				} else {
-					print ("idx = " + idx);
+					//print ("idx = " + idx);
 					if (type [idx] != type [chosen [0]]) {//different types of tiles
 						RemoveAll ();
 					} else if (state [idx] == 1) {// has been chosen
 						if(chosen[cnt - 1] == idx) return;
 						chosen[cnt++] = idx;
-						print ("3 : push " + idx);
+						//print ("3 : push " + idx);
 						RemoveAllinCircle(idx);
 						RemoveAll ();
 					} else {
@@ -193,9 +251,9 @@ public class BoardManager : MonoBehaviour {
 						l.transform.right = dir;
 					
 						chosen [cnt++] = idx;
-						print ("1 : push " + idx);
+						//print ("1 : push " + idx);
 						GameObject clone = Instantiate(line, tiles[idx].transform.position, transform.rotation);
-						clone.transform.parent = transform;
+						//clone.transform.parent = transform;
 						clone.transform.localScale = new Vector3 (0, 1, 1);
 						clone.SetActive (true);
 						lines.Add (clone);
@@ -208,6 +266,10 @@ public class BoardManager : MonoBehaviour {
 		else if (Input.GetMouseButtonUp (0)) {
 			RemoveAll ();
 		}
+		++counterForNewTiles;
+		if (counterForNewTiles == initialCountervalue) {
+			PushNewTiles ();
+			counterForNewTiles = 0;
+		}
 	}
-
 }
