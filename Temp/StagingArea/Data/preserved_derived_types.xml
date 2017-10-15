@@ -1,0 +1,10 @@
+<linker>
+<assembly fullname="Assembly-CSharp">
+<type fullname="BoardManager" preserve="all"/>
+<type fullname="ChangeByBoundary" preserve="all"/>
+<type fullname="TileController" preserve="all"/>
+</assembly>
+<assembly fullname="UnityEngine.Analytics">
+<type fullname="UnityEngine.Analytics.AnalyticsTracker" preserve="all"/>
+</assembly>
+</linker>
