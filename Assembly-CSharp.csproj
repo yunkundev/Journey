@@ -54,6 +54,7 @@
      <Compile Include="Assets\Assets\Scripts\BoardManager.cs" />
      <Compile Include="Assets\Assets\Scripts\ChangeByBoundary.cs" />
      <Compile Include="Assets\Assets\Scripts\TileController.cs" />
+     <Compile Include="Assets\HomeFunction.cs" />
      <Compile Include="Assets\Scripts\ActiveStateToggler.cs" />
      <Compile Include="Assets\Scripts\ApplicationManager.cs" />
      <Compile Include="Assets\Scripts\ButtonsOnClick.cs" />

@@ -1,0 +1,7 @@
+<linker>
+	<assembly fullname="Assembly-CSharp">
+		<type fullname="BoardManager">
+			<method name="ExitGameToStartMenu"/>
+		</type>
+	</assembly>
+</linker>
