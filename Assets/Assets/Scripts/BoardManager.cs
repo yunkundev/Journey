@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour {
 
@@ -34,7 +35,7 @@ public class BoardManager : MonoBehaviour {
 		instance = GetComponent<BoardManager> ();
 		counterForNewTiles = 0;
 		mark = 0;
-		isPracticeMode = false;
+		//isPracticeMode = false;
 		ShowScore ();
 		init ();
 		timerCount = 60;
@@ -122,7 +123,7 @@ public class BoardManager : MonoBehaviour {
 			for (int i = 0; i < cnt; ++i) {
 				tiles [chosen [i]].SetActive (false);
 				state [chosen [i]] = 2;
-				++mark;
+				mark += (i + 2) * 5;
 			}
 		}
 		cnt = 0;
@@ -183,7 +184,7 @@ public class BoardManager : MonoBehaviour {
 			if (InCircle (i, pos)) {
 				tiles [i].SetActive (false);
 				state [i] = 2;
-				mark += 3;
+				mark += 30;
 			}
 		}
 	}
@@ -313,12 +314,14 @@ public class BoardManager : MonoBehaviour {
 		ShowScore ();
 	}
 
-	public void ExitGameToStartMenu(){
-		print ("Exit game");
+	public void ExitGameToStartMenu()
+	{
+		SceneManager.LoadScene (0);
 	}
 
 	void EndGame(){
-		print ("Game Over");
+		ShowFinalScore.score = mark;
+		SceneManager.LoadScene (2);
 	}
 
 }
