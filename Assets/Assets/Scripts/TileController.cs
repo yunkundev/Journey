@@ -60,7 +60,7 @@ public class TileController : MonoBehaviour {
 		);
 
 		++counter;
-		if (counter == 100)
+		if (counter == 50)
 			counter = 0;
 	}
 
@@ -89,7 +89,7 @@ public class TileController : MonoBehaviour {
 			y = Random.Range (yMin + r, yMax - r);
 			x = xMax + r * 2;
 		}
-		print ("init at " + x + " " + y);
+		//print ("init at " + x + " " + y);
 		transform.position = new Vector3 (x, y, 0);
 		WakeUp ();
 	}
@@ -115,5 +115,6 @@ public class TileController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D> ();
 		counter = 0;
 		isSleepy = false;
+		//BoardManager.isPracticeMode = true;
 	}
 }

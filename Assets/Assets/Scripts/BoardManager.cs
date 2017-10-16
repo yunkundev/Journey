@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour {
-	
+
+	public static bool isPracticeMode;
+
 	public static BoardManager instance;
 	public List<Sprite> characters = new List<Sprite> ();
 	public GameObject tile;
@@ -13,6 +15,7 @@ public class BoardManager : MonoBehaviour {
 	public float lenOfLine;
 	public int initialCountervalue;
 	public Text markText;
+	public Text restTime;
 
 
 	private GameObject[] tiles;
@@ -24,13 +27,38 @@ public class BoardManager : MonoBehaviour {
 	private List<GameObject> lines = new List<GameObject>();
 	private int[] state; // the state of every tile, 0: active, 1: chosen but not removed, 2: removed
 	private int mark;
+	private int timerCount;
+
 	// Use this for initialization
 	void Start () {
 		instance = GetComponent<BoardManager> ();
 		counterForNewTiles = 0;
 		mark = 0;
-		markText.text = "Mark: " + mark.ToString ();
+		isPracticeMode = false;
+		ShowScore ();
 		init ();
+		timerCount = 60;
+		ShowTime ();
+	}
+
+	void ShowScore(){
+		markText.text = "Score: " + mark.ToString ();
+	}
+
+	void ShowTime(){
+		if (isPracticeMode)
+			return;
+		if (timerCount == 60)
+			restTime.text = "01:00";
+		else if (timerCount >= 10)
+			restTime.text = "00:" + timerCount.ToString ();
+		else
+			restTime.text = "00:0" + timerCount.ToString ();
+		--timerCount;
+		if (timerCount == -1)
+			EndGame ();
+		else 
+			Invoke ("ShowTime", 1.0f);
 	}
 
 	void init(){
@@ -282,6 +310,15 @@ public class BoardManager : MonoBehaviour {
 			PushNewTiles ();
 			counterForNewTiles = 0;
 		}
-		markText.text = "Mark: " + mark.ToString ();
+		ShowScore ();
 	}
+
+	public void ExitGameToStartMenu(){
+		print ("Exit game");
+	}
+
+	void EndGame(){
+		print ("Game Over");
+	}
+
 }
