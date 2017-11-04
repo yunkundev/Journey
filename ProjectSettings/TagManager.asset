@@ -48,3 +48,6 @@ TagManager:
   - name: Balls
     uniqueID: 1930107389
     locked: 0
+  - name: Effects
+    uniqueID: 2347325741
+    locked: 0

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TileController : MonoBehaviour {
 
+	public static float speedScale = 1;
+
 	public float xMin, xMax, yMin, yMax;
 
 	private Rigidbody2D rb2d;
@@ -49,7 +51,7 @@ public class TileController : MonoBehaviour {
 				else
 					y = Mathf.Abs (y);
 			}
-			Vector2 force = new Vector2 (x, y);
+			Vector2 force = new Vector2 (x * speedScale, y * speedScale);
 			rb2d.AddForce (force);
 		}
 

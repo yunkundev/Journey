@@ -7,9 +7,10 @@ using UnityEngine.SceneManagement;
 public class BoardManager : MonoBehaviour {
 
 	public static bool isPracticeMode;
-
 	public static BoardManager instance;
+
 	public List<Sprite> characters = new List<Sprite> ();
+	public GameObject frozen;
 	public GameObject tile;
 	public GameObject line;
 	public int number;
@@ -17,7 +18,6 @@ public class BoardManager : MonoBehaviour {
 	public int initialCountervalue;
 	public Text markText;
 	public Text restTime;
-
 
 	private GameObject[] tiles;
 	private int[] type;
@@ -29,6 +29,7 @@ public class BoardManager : MonoBehaviour {
 	private int[] state; // the state of every tile, 0: active, 1: chosen but not removed, 2: removed
 	private int mark;
 	private int timerCount;
+	private float lineTimer;
 
 	// Use this for initialization
 	void Start () {
@@ -130,6 +131,19 @@ public class BoardManager : MonoBehaviour {
 		for (int i = 0; i < lines.Count; ++i) {
 			lines [i].SetActive (false);
 		}
+		lines.Clear ();
+	}
+
+	void RemoveAllLines(){
+		hasTiles = false;
+		for (int i = 0; i < cnt; ++i) {
+			ChangeToDynamic (chosen [i]);
+		}
+		cnt = 0;
+		for (int i = 0; i < lines.Count; ++i) {
+			lines [i].SetActive (false);
+		}
+		lines.Clear ();
 	}
 
 	bool InCircle(int idx, int st){
@@ -225,6 +239,17 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+	void InitLineTimer(){
+		lineTimer = Time.time;
+	}
+
+	bool CheckLineTimer(){
+		if (Time.time > lineTimer + 3)
+			return true;
+		else
+			return false;
+	}
+
 	void Update(){
 		if (Input.GetMouseButtonDown (0)) {
 			mousePos = Input.mousePosition;
@@ -242,25 +267,31 @@ public class BoardManager : MonoBehaviour {
 				clone.SetActive (true);
 				clone.GetComponentInChildren<BoxCollider2D> ().enabled = false;
 				lines.Add (clone);
+				InitLineTimer ();
 			}
 		}
 		else if (Input.GetMouseButton (0)) {
 			if (hasTiles) {
 				mousePos = Input.mousePosition;
-
 				int idx = GetTileIndex ();
 				if (idx == -1 || type[idx] != type[chosen[0]]) {
 					//print ("1: Generate line " + lines.Count);
-					GameObject l = lines [lines.Count - 1];
 
-					Vector3 real = Camera.main.ScreenToWorldPoint (mousePos);
-					Vector3 dir = (real - l.transform.position);
-					dir.z = 0;
-					dir = dir.normalized;
-					l.transform.right = dir;
-					Vector3 dt = new Vector3 (real.x - l.transform.position.x, real.y - l.transform.position.y, 0);
-					float dis = Mathf.Sqrt (dt.x * dt.x + dt.y * dt.y);
-					l.transform.localScale = new Vector3 (dis / lenOfLine, 1, 1);
+					if (CheckLineTimer ()) {
+						RemoveAllLines ();
+					} else {
+
+						GameObject l = lines [lines.Count - 1];
+
+						Vector3 real = Camera.main.ScreenToWorldPoint (mousePos);
+						Vector3 dir = (real - l.transform.position);
+						dir.z = 0;
+						dir = dir.normalized;
+						l.transform.right = dir;
+						Vector3 dt = new Vector3 (real.x - l.transform.position.x, real.y - l.transform.position.y, 0);
+						float dis = Mathf.Sqrt (dt.x * dt.x + dt.y * dt.y);
+						l.transform.localScale = new Vector3 (dis / lenOfLine, 1, 1);
+					}
 
 				} else {
 					//print ("idx = " + idx);
@@ -297,7 +328,7 @@ public class BoardManager : MonoBehaviour {
 						clone.SetActive (true);
 						clone.GetComponentInChildren<BoxCollider2D> ().enabled = false;
 						lines.Add (clone);
-
+						InitLineTimer ();
 						//print ("3 : Init" + lr.GetPosition (0) + " " + lr.GetPosition (1));
 					}
 				}
@@ -312,6 +343,10 @@ public class BoardManager : MonoBehaviour {
 			counterForNewTiles = 0;
 		}
 		ShowScore ();
+
+		Color cc = frozen.GetComponent<SpriteRenderer> ().color;
+		++cc.a;
+		frozen.GetComponent<SpriteRenderer> ().color = cc;
 	}
 
 	public void ExitGameToStartMenu()

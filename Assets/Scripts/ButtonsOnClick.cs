@@ -22,6 +22,7 @@ public class ButtonsOnClick : MonoBehaviour {
 	{
 		//Debug.Log("button1");
 		BoardManager.isPracticeMode = true;
+		TileController.speedScale = 1f;
 		SceneManager.LoadScene(1);
 	}
 
@@ -29,6 +30,7 @@ public class ButtonsOnClick : MonoBehaviour {
 	{
 		//Debug.Log ("button2");
 		BoardManager.isPracticeMode = false;
+		TileController.speedScale = 1.5f;
 		SceneManager.LoadScene(1);
 	}
 
