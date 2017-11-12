@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Assets\Scripts\BoardManager.cs" />
+     <Compile Include="Assets\Assets\Scripts\BonusController.cs" />
      <Compile Include="Assets\Assets\Scripts\ChangeByBoundary.cs" />
      <Compile Include="Assets\Assets\Scripts\TileController.cs" />
      <Compile Include="Assets\Scripts\ActiveStateToggler.cs" />

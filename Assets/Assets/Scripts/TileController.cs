@@ -12,6 +12,17 @@ public class TileController : MonoBehaviour {
 	private int counter;
 	private bool isSleepy;
 	private int state; // 0: in boundary, 1: out and up, 2: out and down, 3: out and left, 4: out and right
+	private float scale;
+
+	public void Frozen(){
+		scale = 0.4f;
+		if(rb2d.bodyType == RigidbodyType2D.Dynamic) rb2d.velocity *= 0.2f;
+	}
+
+	public void Recover(){
+		scale = 1.0f;
+		rb2d.velocity *= 2;
+	}
 
 	void FixedUpdate(){
 
@@ -32,7 +43,7 @@ public class TileController : MonoBehaviour {
 				x = -speed;
 			}
 			//rb2d.AddForce (new Vector2 (x, y));
-			rb2d.velocity = new Vector2(x, y);
+			rb2d.velocity = new Vector2(x * scale, y * scale);
 			return;
 		}
 
@@ -51,8 +62,10 @@ public class TileController : MonoBehaviour {
 				else
 					y = Mathf.Abs (y);
 			}
-			Vector2 force = new Vector2 (x * speedScale, y * speedScale);
+			Vector2 force = new Vector2 (x * speedScale * scale, y * speedScale * scale);
 			rb2d.AddForce (force);
+			if (rb2d.velocity.magnitude >= 2.0f * scale)
+				rb2d.velocity *= 0.5f;
 		}
 
 		transform.position = new Vector3 (
@@ -117,6 +130,7 @@ public class TileController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D> ();
 		counter = 0;
 		isSleepy = false;
+		scale = 1;
 		//BoardManager.isPracticeMode = true;
 	}
 }

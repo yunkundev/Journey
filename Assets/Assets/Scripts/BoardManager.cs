@@ -10,16 +10,15 @@ public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
 
 	public List<Sprite> characters = new List<Sprite> ();
-	public GameObject frozen;
-	public GameObject tile;
-	public GameObject line;
+	public List<Sprite> bonusesSprites = new List<Sprite> ();
+	public GameObject tile, line, bonus;
 	public int number;
 	public float lenOfLine;
 	public int initialCountervalue;
 	public Text markText;
 	public Text restTime;
 
-	private GameObject[] tiles;
+	private GameObject[] tiles, bonuses;
 	private int[] type;
 	private Vector3 mousePos;
 	private bool hasTiles;
@@ -30,6 +29,36 @@ public class BoardManager : MonoBehaviour {
 	private int mark;
 	private int timerCount;
 	private float lineTimer;
+	private int hasBonus, bonusCount, prevMark;
+
+	void init_bonus(){
+		hasBonus = 0;
+		bonusCount = 0;
+		prevMark = 0;
+		bonuses = new GameObject[2];
+		for (int i = 0; i < 2; ++i) {
+			GameObject x = Instantiate (bonus, new Vector3(0, 0, 0), bonus.transform.rotation);
+			bonuses [i] = x;
+			//bonuses [i].GetComponent<BonusController> ().Init ();
+			bonuses [i].GetComponent<SpriteRenderer> ().sprite = bonusesSprites [i];
+		}
+		bonus.SetActive (false);
+	}
+
+	void check_bonus(){
+		if (hasBonus != 0)
+			return;
+		++bonusCount;
+		if (bonusCount == 10) {
+			if (mark - prevMark >= 200) {
+				int x = Random.Range (0, 2);
+				hasBonus = x + 1;
+				bonuses [x].GetComponent<BonusController> ().WakeUp ();
+			}
+			prevMark = mark;
+			bonusCount = 0;
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -41,6 +70,7 @@ public class BoardManager : MonoBehaviour {
 		init ();
 		timerCount = 60;
 		ShowTime ();
+		init_bonus ();
 	}
 
 	void ShowScore(){
@@ -146,7 +176,11 @@ public class BoardManager : MonoBehaviour {
 		lines.Clear ();
 	}
 
-	bool InCircle(int idx, int st){
+	Vector3 GetPosition(GameObject go){
+		return go.GetComponent<CircleCollider2D> ().bounds.center;
+	}
+
+	bool InCircle(Vector3 pp, int st){
 //		float sum = 0;
 //		for (int i = st; i < cnt - 1; ++i) {
 //			Vector3 p1 = tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center;
@@ -167,7 +201,6 @@ public class BoardManager : MonoBehaviour {
 		for (int i = st; i < cnt; ++i) {
 			points.Add (tiles [chosen [i]].GetComponent<CircleCollider2D> ().bounds.center);
 		}
-		Vector3 pp = tiles [idx].GetComponent<CircleCollider2D> ().bounds.center;
 		int num = 0;
 		float d1, d2, k;
 		for (int i = 0; i + 1 < points.Count; ++i) {
@@ -184,6 +217,21 @@ public class BoardManager : MonoBehaviour {
 		return num != 0;
 	}
 
+	void Recover(){
+		hasBonus = 0;
+		prevMark = mark;
+		bonusCount = 0;
+		for (int i = 0; i < number; ++i) {
+			tiles [i].GetComponent<TileController> ().Recover ();
+		}
+	}
+
+	void BeFrozen(){
+		for (int i = 0; i < number; ++i) {
+			tiles [i].GetComponent<TileController> ().Frozen ();
+		}
+	}
+
 	void RemoveAllinCircle(int idx){
 		int pos = -1;
 		for (int i = 0; i < cnt; ++i) {
@@ -195,10 +243,28 @@ public class BoardManager : MonoBehaviour {
 		for (int i = 0; i < number; ++i) {
 			if (state [i] != 0)
 				continue;
-			if (InCircle (i, pos)) {
+			if (InCircle (GetPosition(tiles[i]), pos)) {
 				tiles [i].SetActive (false);
 				state [i] = 2;
 				mark += 30;
+			}
+		}
+		if (hasBonus != 0) {
+			print ("has bonus" + hasBonus + " at " + GetPosition(bonuses[hasBonus - 1]));
+			if (InCircle (GetPosition (bonuses [hasBonus - 1]), pos)) {
+				print ("Catch " + hasBonus);
+				bonuses [hasBonus - 1].GetComponent<BonusController> ().Init ();
+				if (hasBonus == 1) {
+					timerCount = Mathf.Min (60, timerCount + 5);
+					CancelInvoke ("ShowTime");
+					ShowTime ();
+					hasBonus = 0;
+					prevMark = mark;
+					bonusCount = 0;
+				} else {
+					BeFrozen ();
+					Invoke ("Recover", 5);
+				}
 			}
 		}
 	}
@@ -343,10 +409,7 @@ public class BoardManager : MonoBehaviour {
 			counterForNewTiles = 0;
 		}
 		ShowScore ();
-
-		Color cc = frozen.GetComponent<SpriteRenderer> ().color;
-		++cc.a;
-		frozen.GetComponent<SpriteRenderer> ().color = cc;
+		if(!isPracticeMode) check_bonus ();
 	}
 
 	public void ExitGameToStartMenu()
