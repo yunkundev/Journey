@@ -12,7 +12,7 @@ public class ShowFinalScore : MonoBehaviour {
 	void Start () 
 	{
 
-		mytext.text = "Final Score: " + score;
+		mytext.text = " " + score;
 		
 	}
 }
