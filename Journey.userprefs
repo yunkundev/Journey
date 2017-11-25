@@ -1,14 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Assets/Scripts/BoardManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Assets/Scripts/ShowFinalScore.cs">
     <Files>
-      <File FileName="Assets/Scripts/HomeFunction.cs" Line="18" Column="25" />
-      <File FileName="Assets/Assets/Scripts/BoardManager.cs" Line="65" Column="26" />
-      <File FileName="Assets/Assets/Scripts/ChangeByBoundary.cs" Line="8" Column="1" />
-      <File FileName="Assets/Assets/Scripts/TileController.cs" Line="67" Column="31" />
-      <File FileName="Assets/Scripts/ShowFinalScore.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/ButtonsOnClick.cs" Line="1" Column="1" />
-      <File FileName="Assets/Assets/Scripts/BonusController.cs" Line="18" Column="11" />
+      <File FileName="Assets/Assets/Scripts/ShowFinalScore.cs" Line="36" Column="28" />
+      <File FileName="Assets/Assets/Scripts/ButtonsOnClick.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
