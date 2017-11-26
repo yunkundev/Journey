@@ -19,6 +19,30 @@ public class ShowFinalScore : MonoBehaviour {
 
 		mytext.text = " " + score;
 
+		ArrayList ranks = new ArrayList ();
+		for (int i = 1; i <= 6; i++) 
+		{
+			if (PlayerPrefs.HasKey ("Rank" + i)) 
+			{
+				ranks.Add (PlayerPrefs.GetInt("Rank" + i));
+			}	
+
+		}
+		ranks.Add (score);
+		ranks.Sort ();
+		for (int i = 1; i <= 6; i++) 
+		{
+			if (i > ranks.Count) 
+			{
+				PlayerPrefs.SetInt ("Rank" + i, -1);
+			} 
+			else 
+			{
+				PlayerPrefs.SetInt ("Rank" + i, ranks.GetType(i-1));
+			}
+		}
+
+
 		btn1.onClick.AddListener (btnMainMenu);
 		btn2.onClick.AddListener (btnReplace);
 		btn3.onClick.AddListener (btnScores);
@@ -39,6 +63,7 @@ public class ShowFinalScore : MonoBehaviour {
 	void btnScores()
 	{
 		Debug.Log ("button3");
+		SceneManager.LoadScene (4);
 	}
 
 }

@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Assets/Scences/Setting.unity
     guid: 5e37a25a714734746863d520549e2374
+  - enabled: 1
+    path: Assets/Assets/Scences/Ranking.unity
+    guid: 52aa2c39029ca4714a813fb4da49c953
