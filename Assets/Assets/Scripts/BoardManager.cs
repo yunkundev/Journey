@@ -666,6 +666,7 @@ public class BoardManager : MonoBehaviour {
 		counterForPunish = 0;
 		punishExist = false;
 		restTime = timeForRemovePunish;
+		CancelInvoke ("punish_boom");
 		CancelInvoke ("show_time");
 		show_time ();
 	}
