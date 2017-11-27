@@ -27,7 +27,7 @@ public class ButtonsOnClick : MonoBehaviour {
 		TextHint.mode = 1;
 		BoardManager.PlayMode = 1;
 		TileController.speedScale = 1f;
-		SceneManager.LoadScene(1);
+		SceneManager.LoadScene(5);
 	}
 
 	void btnChanllenge()
@@ -36,7 +36,7 @@ public class ButtonsOnClick : MonoBehaviour {
 		TextHint.mode = 2;
 		BoardManager.PlayMode = 2;
 		TileController.speedScale = 1f;
-		SceneManager.LoadScene(1);
+		SceneManager.LoadScene(5);
 	}
 
 	void btnCrazy()
@@ -45,7 +45,7 @@ public class ButtonsOnClick : MonoBehaviour {
 		TextHint.mode = 3;
 		BoardManager.PlayMode = 3;
 		TileController.speedScale = 1f;
-		SceneManager.LoadScene (1);
+		SceneManager.LoadScene (5);
 	}
 
 	void btnSettings()

@@ -10,7 +10,7 @@ public class TextHint : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		return;
+		Time.timeScale = 1.0f;
 		instruction = GetComponent<Text>();
 		if(mode == 1){
 			instruction.text = "Using the pick-ups to earn more!";

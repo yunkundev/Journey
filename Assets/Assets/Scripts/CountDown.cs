@@ -10,13 +10,12 @@ public class CountDown : MonoBehaviour {
 	public Sprite[] imageList;
 
 	void Awake(){
-		print ("Awake");
 		number = GetComponent<Image>();
 		number.enabled = false;
 	}
 
 	void Start () {
-		print ("Start count down");
+		Time.timeScale = 1.0f;
 		StartCoroutine(countdownDelay(3));  
 	}
 
