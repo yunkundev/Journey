@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - tiles
+  - bonus
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2601116931
+    locked: 0
+  - name: Lines
+    uniqueID: 1241404349
+    locked: 0
+  - name: Bugs
+    uniqueID: 3979449409
+    locked: 0
+  - name: Toppest
+    uniqueID: 1222912837
+    locked: 0
+  - name: Uppest
+    uniqueID: 4272487115
+    locked: 0
